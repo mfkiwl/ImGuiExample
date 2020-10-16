@@ -42,6 +42,9 @@
     <ClCompile Include="ImGui\impl\imgui_impl_opengl3.cpp">
       <Filter>ImGui\impl</Filter>
     </ClCompile>
+    <ClCompile Include="SnowyArkGui.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\OpenGLEnvironment\include\GLShader.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="ImGui\impl\imgui_impl_opengl3.h">
       <Filter>ImGui\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="SnowyArkGui.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

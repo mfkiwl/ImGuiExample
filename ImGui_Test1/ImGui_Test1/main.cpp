@@ -6,6 +6,8 @@
 #include"ImGui/impl/imgui_impl_glfw.h"
 #include"ImGui/impl/imgui_impl_opengl3.h"
 
+#include"SnowyArkGui.h"
+
 #include<GLShader.h>
 
 #include<iostream>
@@ -16,10 +18,9 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 //setting
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-const char* glsl_version = "#version 150";
 
-bool show_demo_window = true;
-bool show_another_window = false;
+
+bool showSnowyArkGui = true;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 int main()
@@ -58,11 +59,18 @@ int main()
 	//set ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
+	ImGuiIO& io = ImGui::GetIO();(void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
 	//setup ImGui style
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsDark();		//DarkStyle
+	//ImGui::StyleColorsLight();		//LightStyle
+	//ImGui::StyleColorsClassic();	//ClassicStyle
+
 	//setup platform/renderer bindings
+	const char* glsl_version = "#version 330";	//OpenGL3.3
+
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
@@ -102,36 +110,19 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		{
-			static float f = 0.0f;
-			static int counter = 0;
-
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Another Window", &show_another_window);
-
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
-			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-		}
+		//Create ImGui
+		if(showSnowyArkGui)
+			ShowSnowyArkImGuiWindow(&showSnowyArkGui);
 
 		//render
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//render the triangle
-		shader.use();
+		/*shader.use();
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3);*/
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

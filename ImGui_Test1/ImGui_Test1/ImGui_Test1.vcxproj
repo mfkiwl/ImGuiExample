@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\OpenGLEnvironment\glad.c" />
+    <ClCompile Include="SnowyArkGui.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="ImGui\imgui_internal.h" />
     <ClInclude Include="ImGui\impl\imgui_impl_glfw.h" />
     <ClInclude Include="ImGui\impl\imgui_impl_opengl3.h" />
+    <ClInclude Include="SnowyArkGui.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\fragmentShader.frag" />
