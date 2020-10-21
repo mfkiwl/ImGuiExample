@@ -2,6 +2,10 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
 #include"ImGui/imgui.h"
 #include"ImGui/impl/imgui_impl_glfw.h"
 #include"ImGui/impl/imgui_impl_opengl3.h"
@@ -16,8 +20,8 @@ void ProcessInput(GLFWwindow* window);
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 //setting
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1440;
+const unsigned int SCR_HEIGHT = 960;
 
 
 bool showSnowyArkGui = true;
@@ -78,10 +82,10 @@ int main()
 
 	//set up vertex data (and buffer(s)) and configure vertex attributes
 	float vertices[] = {
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z,  // bottom right
-		-0.5f, -0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z,  // bottom left
-		 0.0f,  0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z   // top 
+		// positions
+		 0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  // bottom left
+		 0.0f,  0.5f, 0.0f,  // top 
 	};
 
 	unsigned int VBO, VAO;
@@ -93,11 +97,8 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
 	//position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	//color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 
 	//render loop
 	while (!glfwWindowShouldClose(window))
@@ -115,10 +116,11 @@ int main()
 			ShowSnowyArkWindow(&showSnowyArkGui);
 
 		//render
-		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//render the triangle
+		shader.SetVec4("triangleColor", glm::vec4(triangleColor.x,triangleColor.y,triangleColor.z,triangleColor.w));
 		shader.use();
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
