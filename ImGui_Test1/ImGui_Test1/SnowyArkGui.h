@@ -1,4 +1,13 @@
 #pragma once
 #include"ImGui/imgui.h"
 
-void ShowSnowyArkImGuiWindow(bool* p_open);
+extern ImVec4 triangleColor;
+
+
+void ShowSnowyArkWindow(bool* p_open);
+
+
+
+
+
+

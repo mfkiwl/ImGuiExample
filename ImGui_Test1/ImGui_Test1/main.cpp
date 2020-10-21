@@ -21,7 +21,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 
 bool showSnowyArkGui = true;
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 
 int main()
 {
@@ -65,7 +65,7 @@ int main()
 
 	//setup ImGui style
 	ImGui::StyleColorsDark();		//DarkStyle
-	//ImGui::StyleColorsLight();		//LightStyle
+	//ImGui::StyleColorsLight();	//LightStyle
 	//ImGui::StyleColorsClassic();	//ClassicStyle
 
 	//setup platform/renderer bindings
@@ -79,9 +79,9 @@ int main()
 	//set up vertex data (and buffer(s)) and configure vertex attributes
 	float vertices[] = {
 		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+		 0.5f, -0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z,  // bottom right
+		-0.5f, -0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z,  // bottom left
+		 0.0f,  0.5f, 0.0f,  triangleColor.x, triangleColor.y, triangleColor.z   // top 
 	};
 
 	unsigned int VBO, VAO;
@@ -112,16 +112,16 @@ int main()
 
 		//Create ImGui
 		if(showSnowyArkGui)
-			ShowSnowyArkImGuiWindow(&showSnowyArkGui);
+			ShowSnowyArkWindow(&showSnowyArkGui);
 
 		//render
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//render the triangle
-		/*shader.use();
+		shader.use();
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);*/
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

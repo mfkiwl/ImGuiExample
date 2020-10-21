@@ -18,58 +18,92 @@
 #else
 #include <stdint.h>         // intptr_t
 #endif
-void ShowSnowyArkImGuiWindow(bool* p_open)
+
+//Setting
+ImVec4 triangleColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+// Forward Declarations
+static void ShowSnowyArkMainMenuBar();
+static void ShowSnowyArkHelpWindow(bool* p_open);
+static void ShowSnowyArkOverlay(bool* p_open);
+
+
+void ShowSnowyArkWindow(bool* p_open)
 {
     // Exceptionally add an extra assert here for people confused about initial Dear ImGui setup
     // Most ImGui functions would normally just crash if the context is missing.
     IM_ASSERT(ImGui::GetCurrentContext() != NULL && "Missing dear imgui context. Refer to examples app!");
 
-    // Demonstrate the various window flags. Typically you would just use the default!
-    static bool no_titlebar = false;
-    static bool no_scrollbar = false;
-    static bool no_menu = false;
-    static bool no_move = false;
-    static bool no_resize = false;
-    static bool no_collapse = false;
-    static bool no_close = false;
-    static bool no_nav = false;
-    static bool no_background = false;
-    static bool no_bring_to_front = false;
+    //Other Windows
+    static bool showSnowyArkMainMenuBar = true;
+    static bool showSnowyArkHelpWindow = false;
+    static bool showSnowyArkOverlay = true;
 
-    ImGuiWindowFlags window_flags = 0;
-    if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
-    if (no_scrollbar)       window_flags |= ImGuiWindowFlags_NoScrollbar;
-    if (!no_menu)           window_flags |= ImGuiWindowFlags_MenuBar;
-    if (no_move)            window_flags |= ImGuiWindowFlags_NoMove;
-    if (no_resize)          window_flags |= ImGuiWindowFlags_NoResize;
-    if (no_collapse)        window_flags |= ImGuiWindowFlags_NoCollapse;
-    if (no_nav)             window_flags |= ImGuiWindowFlags_NoNav;
-    if (no_background)      window_flags |= ImGuiWindowFlags_NoBackground;
-    if (no_bring_to_front)  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
-    if (no_close)           p_open = NULL; // Don't pass our bool* to Begin
+    if (showSnowyArkMainMenuBar)          ShowSnowyArkMainMenuBar();
+    if (showSnowyArkHelpWindow)           ShowSnowyArkHelpWindow(&showSnowyArkHelpWindow);
+    if (showSnowyArkOverlay)              ShowSnowyArkOverlay(&showSnowyArkOverlay);
 
     // We specify a default position/size in case there's no data in the .ini file.
     // We only do it to make the demo applications a little more welcoming, but typically this isn't required.
-    ImGui::SetNextWindowPos(ImVec2(500, 18), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(300, 582), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(540, 18), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(260, 200), ImGuiCond_FirstUseEver);
 
-    //create Main Menu Bar
+    //create window
+    if (!ImGui::Begin("SnowyArk", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove))
+    {
+        ImGui::End();
+        return;
+    }
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Menu"))
+        {
+            ImGui::MenuItem("Open","Ctrl+W");
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Windows"))
+        {
+            ImGui::MenuItem("Main Menu Bar", NULL, &showSnowyArkMainMenuBar);
+            ImGui::MenuItem("Simple Overlay", NULL, &showSnowyArkOverlay);
+            ImGui::Separator();
+            ImGui::MenuItem("Help", NULL, &showSnowyArkHelpWindow);
+
+            ImGui::EndMenu();
+        }
+        
+
+        ImGui::EndMenuBar();
+    }
+    ImGui::ColorEdit3("Triangle Color", (float*)&triangleColor);
+    //Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
+    //...What Fuck?
+    ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+
+    ImGui::End();
+}
+
+static void ShowSnowyArkMainMenuBar()
+{
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("Flie"))
         {
-            if (ImGui::MenuItem("Open"))
+            if (ImGui::BeginMenu("New"))
             {
+                ImGui::MenuItem("Flie");
+                ImGui::MenuItem("Folder");
+
+                ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Quit", "Alt+F4"));
-            {
-            }
+            if (ImGui::MenuItem("Open")) {}
+            if (ImGui::MenuItem("Quit", "Alt+F4")) {}
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))
         {
-            if(ImGui::MenuItem("Undo", "Ctrl+Z")) {}
-            if(ImGui::MenuItem("Redo", "Ctrl+Y", false, false)) {}
+            if (ImGui::MenuItem("Undo", "Ctrl+Z")) {}
+            if (ImGui::MenuItem("Redo", "Ctrl+Y", false, false)) {}
             ImGui::Separator();
             if (ImGui::MenuItem("Cut", "CTRL+X")) {}
             if (ImGui::MenuItem("Copy", "CTRL+C")) {}
@@ -78,21 +112,66 @@ void ShowSnowyArkImGuiWindow(bool* p_open)
         }
         ImGui::EndMainMenuBar();
     }
+}
 
-
-    //create window
-    if (!ImGui::Begin("SnowyArk",p_open,window_flags))
+static void ShowSnowyArkHelpWindow(bool* p_open)
+{
+    ImGui::SetNextWindowSize(ImVec2(400, 150), ImGuiCond_FirstUseEver);
+    if (!ImGui::Begin("Help", p_open))
     {
         ImGui::End();
         return;
     }
 
-    //Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
-    //...What Fuck?
-    ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-
+    ImGui::Text("Help Documentation");
+    ImGui::Separator();
+    ImGui::BulletText("SnowyArk is a soft renderer based on OpenGL");
 
 
     ImGui::End();
 }
+
+void ShowSnowyArkOverlay(bool* p_open)
+{
+    const float DISTANCE = 18.0f;
+    static int corner = 0;
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiWindowFlags overlayWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+    if (corner != -1)
+    {
+        overlayWindowFlags |= ImGuiWindowFlags_NoMove;
+        ImVec2 overlayPos = ImVec2((corner & 1) ? io.DisplaySize.x - DISTANCE - 18 : DISTANCE - 18, (corner & 2) ? io.DisplaySize.y - DISTANCE : DISTANCE);
+        ImVec2 overlayPosPivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+        ImGui::SetNextWindowPos(overlayPos, ImGuiCond_Always, overlayPosPivot);
+    }
+    ImGui::SetNextWindowBgAlpha(0.35f);// Transparent background
+    if (ImGui::Begin("Overlay", p_open, overlayWindowFlags))
+    {
+        ImGui::Text("This is a Overlay Demo.");
+        ImGui::Separator();
+        if (ImGui::IsMousePosValid())
+        {
+            ImGui::Text("Mouse Position:(%.1f,%.1f)", io.MousePos.x, io.MousePos.y);
+        }else
+        {
+            ImGui::Text("Mouse Position:<invalid>");
+        }
+        ImGui::Text("FPS:%.1f", ImGui::GetIO().Framerate);
+        if (ImGui::BeginPopupContextWindow())
+        {
+            if (ImGui::MenuItem("Custom", NULL, corner == -1)) corner = -1;
+            if (ImGui::MenuItem("Top-left", NULL, corner == 0)) corner = 0;
+            if (ImGui::MenuItem("Top-right", NULL, corner == 1)) corner = 1;
+            if (ImGui::MenuItem("Bottom-left", NULL, corner == 2)) corner = 2;
+            if (ImGui::MenuItem("Bottom-right", NULL, corner == 3)) corner = 3;
+            if (p_open && ImGui::MenuItem("Close")) *p_open = false;
+            ImGui::EndPopup();
+        }
+    }
+    ImGui::End();
+}
+
+
+
+
 #endif // #ifndef IMGUI_DISABLE
