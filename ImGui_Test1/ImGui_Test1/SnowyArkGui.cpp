@@ -77,6 +77,20 @@
 // [SECTION] Forward Declarations, Helpers
 //-----------------------------------------------------------------------------
 
+//setting
+ImVec4 triangleColor        = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+ImVec4 backgroundColor      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+ImVec4 testTextColor        = ImVec4(0.20f, 0.70f, 0.50f, 1.00f);
+
+// Forward Declarations
+static void ShowSnowyArkMainMenuBar();
+static void ShowSnowyArkHelpWindow(bool* p_open);
+static void ShowSnowyArkOverlay(bool* p_open);
+static void ShowSnowyArkSetTestColorDemo(bool* p_open);
+
+static void ShowSnowyArkStyleEditor(ImGuiStyle* ref = NULL);
+
+
 // Helper to display a little (?) mark which shows a tooltip when hovered.
 // In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.md)
 static void HelpMarker(const char* desc)
@@ -92,16 +106,6 @@ static void HelpMarker(const char* desc)
     }
 }
 
-//setting
-ImVec4 triangleColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-// Forward Declarations
-static void ShowSnowyArkMainMenuBar();
-static void ShowSnowyArkHelpWindow(bool* p_open);
-static void ShowSnowyArkOverlay(bool* p_open);
-static void ShowSnowyArkStyleEditor(ImGuiStyle* ref = NULL);
-
-
 void ShowSnowyArkWindow(bool* p_open)
 {
     // Exceptionally add an extra assert here for people confused about initial Dear ImGui setup
@@ -109,14 +113,19 @@ void ShowSnowyArkWindow(bool* p_open)
     IM_ASSERT(ImGui::GetCurrentContext() != NULL && "Missing dear imgui context. Refer to examples app!");
 
     //Other Windows
-    static bool showSnowyArkMainMenuBar = true;
-    static bool showSnowyArkHelpWindow = false;
-    static bool showSnowyArkOverlay = true;
-    static bool showSnowyArkStyleEditor = false;
+    static bool showSnowyArkMainMenuBar             = true;
+    static bool showSnowyArkHelpWindow              = false;
+    static bool showSnowyArkOverlay                 = true;
+    static bool showSnowyArkSetTestColorDemo        = false;
 
-    if (showSnowyArkMainMenuBar)          ShowSnowyArkMainMenuBar();
-    if (showSnowyArkHelpWindow)           ShowSnowyArkHelpWindow(&showSnowyArkHelpWindow);
-    if (showSnowyArkOverlay)              ShowSnowyArkOverlay(&showSnowyArkOverlay);
+
+    static bool showSnowyArkStyleEditor             = false;
+
+    if (showSnowyArkMainMenuBar)                  ShowSnowyArkMainMenuBar();
+    if (showSnowyArkHelpWindow)                   ShowSnowyArkHelpWindow(&showSnowyArkHelpWindow);
+    if (showSnowyArkOverlay)                      ShowSnowyArkOverlay(&showSnowyArkOverlay);
+    if (showSnowyArkSetTestColorDemo)             ShowSnowyArkSetTestColorDemo(&showSnowyArkSetTestColorDemo);
+
     if (showSnowyArkStyleEditor)
     {
         ImGui::SetNextWindowSize(ImVec2(400, 700), ImGuiCond_FirstUseEver);
@@ -143,28 +152,34 @@ void ShowSnowyArkWindow(bool* p_open)
             ImGui::MenuItem("Open","Ctrl+W");
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Test Demo"))
+        {
+            ImGui::MenuItem("Set Text Color", NULL, &showSnowyArkSetTestColorDemo);
+            ImGui::EndMenu();
+        }
         if (ImGui::BeginMenu("Windows"))
         {
             ImGui::MenuItem("Main Menu Bar", NULL, &showSnowyArkMainMenuBar);
             ImGui::MenuItem("Simple Overlay", NULL, &showSnowyArkOverlay);
             ImGui::Separator();
             ImGui::MenuItem("Help", NULL, &showSnowyArkHelpWindow);
-            if (ImGui::BeginMenu("Configuration"))
-            {
-                ImGui::MenuItem("configuration##Configuration");
-                ImGui::MenuItem("Beckend Flags");
-                ImGui::MenuItem("Style Editor", NULL, &showSnowyArkStyleEditor);
-                ImGui::MenuItem("Capture/Logging");
-                ImGui::EndMenu();
-            }
             ImGui::EndMenu();
         }
-        
+        if (ImGui::BeginMenu("Configuration"))
+        {
+            ImGui::MenuItem("configuration##Configuration");
+            ImGui::MenuItem("Beckend Flags");
+            ImGui::MenuItem("Style Editor", NULL, &showSnowyArkStyleEditor);
+            ImGui::MenuItem("Capture/Logging");
+            ImGui::EndMenu();
+        }
 
         ImGui::EndMenuBar();
     }
 
     ImGui::ColorEdit3("Triangle Color", (float*)&triangleColor);
+    ImGui::ColorEdit3("Background Color", (float*)&backgroundColor);
+
     //Leave a fixed amount of width for labels (by passing a negative value), the rest goes to widgets.
     //...What Fuck?
     ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
@@ -222,7 +237,7 @@ static void ShowSnowyArkHelpWindow(bool* p_open)
     ImGui::End();
 }
 
-void ShowSnowyArkOverlay(bool* p_open)
+static void ShowSnowyArkOverlay(bool* p_open)
 {
     const float DISTANCE = 18.0f;
     static int corner = 0;
@@ -259,6 +274,23 @@ void ShowSnowyArkOverlay(bool* p_open)
             ImGui::EndPopup();
         }
     }
+    ImGui::End();
+}
+
+static void ShowSnowyArkSetTestColorDemo(bool* p_open)
+{
+    if (!ImGui::Begin("Set Test Color Demo", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::End();
+        return;
+    }
+    ImGui::Text("This a demo for how to set text color.");
+
+    ImGui::ColorEdit3("Text Color", (float*)&testTextColor);
+    ImGui::Text("Demo:");
+    ImGui::SameLine();
+    ImGui::TextColored(testTextColor, "This is a text that can change color.");
+    ImGui::Text(u8"ÄãºÃ");
     ImGui::End();
 }
 

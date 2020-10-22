@@ -78,7 +78,7 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-
+	io.Fonts->AddFontFromFileTTF("fonts/msyh.ttc", 16.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	//set up vertex data (and buffer(s)) and configure vertex attributes
 	float vertices[] = {
@@ -116,7 +116,7 @@ int main()
 			ShowSnowyArkWindow(&showSnowyArkGui);
 
 		//render
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//render the triangle
