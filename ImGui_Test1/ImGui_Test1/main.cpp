@@ -39,7 +39,7 @@ int main()
 #endif // _APPLE_
 
 	//glfw:create window
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "SnowyArk", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create window" << std::endl;
@@ -68,8 +68,8 @@ int main()
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
 	//setup ImGui style
-	ImGui::StyleColorsDark();		//DarkStyle
-	//ImGui::StyleColorsLight();	//LightStyle
+	//ImGui::StyleColorsDark();		//DarkStyle
+	ImGui::StyleColorsLight();	//LightStyle
 	//ImGui::StyleColorsClassic();	//ClassicStyle
 
 	//setup platform/renderer bindings
@@ -78,7 +78,7 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	io.Fonts->AddFontFromFileTTF("fonts/msyh.ttc", 16.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	io.Fonts->AddFontFromFileTTF("fonts/msyh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	//set up vertex data (and buffer(s)) and configure vertex attributes
 	float vertices[] = {

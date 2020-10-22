@@ -77,7 +77,7 @@
 // [SECTION] Forward Declarations, Helpers
 //-----------------------------------------------------------------------------
 
-//setting
+//setting Color
 ImVec4 triangleColor        = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 ImVec4 backgroundColor      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 ImVec4 testTextColor        = ImVec4(0.20f, 0.70f, 0.50f, 1.00f);
@@ -136,7 +136,7 @@ void ShowSnowyArkWindow(bool* p_open)
 
     // We specify a default position/size in case there's no data in the .ini file.
     // We only do it to make the demo applications a little more welcoming, but typically this isn't required.
-    ImGui::SetNextWindowPos(ImVec2(1040, 18), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(1040, 24), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
 
     //create window
@@ -239,18 +239,19 @@ static void ShowSnowyArkHelpWindow(bool* p_open)
 
 static void ShowSnowyArkOverlay(bool* p_open)
 {
-    const float DISTANCE = 18.0f;
+    const float DISTANCE = 24.0f;
     static int corner = 0;
     ImGuiIO& io = ImGui::GetIO();
-    ImGuiWindowFlags overlayWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+    ImGuiWindowFlags overlayWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
     if (corner != -1)
     {
         overlayWindowFlags |= ImGuiWindowFlags_NoMove;
-        ImVec2 overlayPos = ImVec2((corner & 1) ? io.DisplaySize.x - DISTANCE - 18 : DISTANCE - 18, (corner & 2) ? io.DisplaySize.y - DISTANCE : DISTANCE);
+        ImVec2 overlayPos = ImVec2((corner & 1) ? io.DisplaySize.x - DISTANCE - 24 : DISTANCE - 24, (corner & 2) ? io.DisplaySize.y - DISTANCE : DISTANCE);
         ImVec2 overlayPosPivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
         ImGui::SetNextWindowPos(overlayPos, ImGuiCond_Always, overlayPosPivot);
     }
     ImGui::SetNextWindowBgAlpha(0.35f);// Transparent background
+    ImGui::SetNextWindowSize(ImVec2(210, 80), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Overlay", p_open, overlayWindowFlags))
     {
         ImGui::Text("This is a Overlay Demo.");

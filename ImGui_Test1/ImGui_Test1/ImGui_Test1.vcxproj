@@ -158,6 +158,7 @@
     <ClInclude Include="ImGui\imgui_internal.h" />
     <ClInclude Include="ImGui\impl\imgui_impl_glfw.h" />
     <ClInclude Include="ImGui\impl\imgui_impl_opengl3.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SnowyArkGui.h" />
   </ItemGroup>
   <ItemGroup>
