@@ -83,12 +83,7 @@ ImVec4 backgroundColor      = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 ImVec4 testTextColor        = ImVec4(0.20f, 0.70f, 0.50f, 1.00f);
 
 // Forward Declarations
-static void ShowSnowyArkMainMenuBar();
-static void ShowSnowyArkHelpWindow(bool* p_open);
-static void ShowSnowyArkOverlay(bool* p_open);
-static void ShowSnowyArkSetTestColorDemo(bool* p_open);
 
-static void ShowSnowyArkStyleEditor(ImGuiStyle* ref = NULL);
 
 
 // Helper to display a little (?) mark which shows a tooltip when hovered.
@@ -117,6 +112,7 @@ void ShowSnowyArkWindow(bool* p_open)
     static bool showSnowyArkHelpWindow              = false;
     static bool showSnowyArkOverlay                 = true;
     static bool showSnowyArkSetTestColorDemo        = false;
+    static bool showSnowyArkSetFontStyleDemo    = false;
 
 
     static bool showSnowyArkStyleEditor             = false;
@@ -125,6 +121,7 @@ void ShowSnowyArkWindow(bool* p_open)
     if (showSnowyArkHelpWindow)                   ShowSnowyArkHelpWindow(&showSnowyArkHelpWindow);
     if (showSnowyArkOverlay)                      ShowSnowyArkOverlay(&showSnowyArkOverlay);
     if (showSnowyArkSetTestColorDemo)             ShowSnowyArkSetTestColorDemo(&showSnowyArkSetTestColorDemo);
+    if (showSnowyArkSetFontStyleDemo)             ShowSnowyArkSetFontStyleDemo(&showSnowyArkSetFontStyleDemo);
 
     if (showSnowyArkStyleEditor)
     {
@@ -155,6 +152,7 @@ void ShowSnowyArkWindow(bool* p_open)
         if (ImGui::BeginMenu("Test Demo"))
         {
             ImGui::MenuItem("Set Text Color", NULL, &showSnowyArkSetTestColorDemo);
+            ImGui::MenuItem("Set Font Style", NULL, &showSnowyArkSetFontStyleDemo);
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Windows"))
@@ -288,10 +286,75 @@ static void ShowSnowyArkSetTestColorDemo(bool* p_open)
     ImGui::Text("This a demo for how to set text color.");
 
     ImGui::ColorEdit3("Text Color", (float*)&testTextColor);
-    ImGui::Text("Demo:");
-    ImGui::SameLine();
-    ImGui::TextColored(testTextColor, "This is a text that can change color.");
-    ImGui::Text(u8"你好");
+
+    static int languageIdx = 0;
+    static int _languageIdx = 0;
+    if (ImGui::Combo("Language", &languageIdx, "English\0Chinese\0All\0"))
+    {
+        switch (languageIdx)
+        {
+        case 0:
+            _languageIdx = 0;
+            break;
+        case 1:
+            _languageIdx = 1;
+            break;
+        case 2:
+            _languageIdx = 2;
+            break;
+        }
+    }
+    if (_languageIdx == 0)
+    {
+        ImGui::Text("Demo:");
+        ImGui::SameLine();
+        ImGui::TextColored(testTextColor, "This is a text that can change color.");
+    }
+    if (_languageIdx == 1)
+    {
+        ImGui::Text("Demo:");
+        ImGui::SameLine();
+        ImGui::TextColored(testTextColor, u8"这是一个可以改变颜色的文本。");
+    }
+    if (_languageIdx == 2)
+    {
+        ImGui::Text("Demo:");
+        ImGui::SameLine();
+        ImGui::TextColored(testTextColor, "This is a text that can change color.");
+        ImGui::Text("Demo:");
+        ImGui::SameLine();
+        ImGui::TextColored(testTextColor, u8"这是一个可以改变颜色的文本。");
+    }
+
+    ImGui::End();
+}
+
+void ShowSnowyArkSetFontStyleDemo(bool* p_open)
+{
+    static int selectFontStyle = -1;
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui::SetNextWindowSize(ImVec2(240.0f, 150.0f), ImGuiCond_FirstUseEver);
+    if (!ImGui::Begin("Set Font Style Demo", p_open))
+    {
+        ImGui::End();
+        return;
+    }
+    ImGui::RadioButton(io.Fonts->Fonts[0]->GetDebugName(), &selectFontStyle, 0);
+    ImGui::RadioButton(io.Fonts->Fonts[1]->GetDebugName(), &selectFontStyle, 1);
+    if (selectFontStyle == 0)
+    {
+        ImGui::Text("Demo:\t");
+        ImGui::PushFont(io.Fonts->Fonts[0]);
+        ImGui::Text(io.Fonts->Fonts[0]->GetDebugName());
+        ImGui::PopFont();
+    }
+    if (selectFontStyle == 1)
+    {
+        ImGui::Text("Demo:\t");
+        ImGui::PushFont(io.Fonts->Fonts[1]);
+        ImGui::Text(io.Fonts->Fonts[1]->GetDebugName());
+        ImGui::PopFont();
+    }
     ImGui::End();
 }
 
@@ -309,7 +372,7 @@ static void ShowSnowyArkSetTestColorDemo(bool* p_open)
 // Useful for quick combo boxes where the choices are known locally.
 bool ImGui::ShowStyleSelector(const char* label)
 {
-    static int style_idx = -1;
+    static int style_idx = 2;
     if (ImGui::Combo(label, &style_idx, "Classic\0Dark\0Light\0"))
     {
         switch (style_idx)

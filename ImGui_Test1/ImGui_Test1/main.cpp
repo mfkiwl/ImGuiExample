@@ -67,6 +67,9 @@ int main()
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
+	ImFont* font1 = io.Fonts->AddFontFromFileTTF(u8"fonts/微软雅黑.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* font2 = io.Fonts->AddFontFromFileTTF(u8"fonts/庞门正道标题体.TTF", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+
 	//setup ImGui style
 	//ImGui::StyleColorsDark();		//DarkStyle
 	ImGui::StyleColorsLight();	//LightStyle
@@ -78,7 +81,7 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	io.Fonts->AddFontFromFileTTF("fonts/msyh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+
 
 	//set up vertex data (and buffer(s)) and configure vertex attributes
 	float vertices[] = {
