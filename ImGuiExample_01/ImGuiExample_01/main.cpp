@@ -67,8 +67,8 @@ int main()
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-	ImFont* font1 = io.Fonts->AddFontFromFileTTF(u8"fonts/微软雅黑.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
-	ImFont* font2 = io.Fonts->AddFontFromFileTTF(u8"fonts/庞门正道标题体.TTF", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* font1 = io.Fonts->AddFontFromFileTTF(u8"fonts\\微软雅黑.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+	ImFont* font2 = io.Fonts->AddFontFromFileTTF(u8"fonts\\庞门正道标题体.TTF", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 
 	//setup ImGui style
 	//ImGui::StyleColorsDark();		//DarkStyle

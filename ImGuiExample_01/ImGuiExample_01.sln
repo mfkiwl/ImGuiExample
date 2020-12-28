@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui_Test1", "ImGui_Test1\ImGui_Test1.vcxproj", "{6591DC44-F5B0-4A87-A15B-C516CEDE500F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGuiExample_01", "ImGuiExample_01\ImGuiExample_01.vcxproj", "{6591DC44-F5B0-4A87-A15B-C516CEDE500F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
