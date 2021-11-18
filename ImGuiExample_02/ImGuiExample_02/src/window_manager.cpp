@@ -19,7 +19,7 @@ WindowManager::WindowManager(GLCamera& camera,
 	this->lastY = static_cast<float>(height) / 2.0f;
 	this->firstMouse = true;
 	//timing
-	this->deltaTime = 0.0f;		// time between current frame and last frame
+	this->deltaTime = 0.0f;	//time between current frame and last frame
 	this->lastTime = 0.0f;
 
 	this->window = CreateWindow(monitor, share);
@@ -42,10 +42,17 @@ void WindowManager::SetCallback()
 
 void WindowManager::ProcessInput()
 {
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		moveCamera = true;
+	}	
 	else
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		moveCamera = false;
+	}
+		
 
 	this->SetPerFrameTimeLogic();
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -66,7 +73,7 @@ void WindowManager::ProcessInput()
 
 void WindowManager::Show(unsigned int xPos, unsigned int yPos)
 {
-	glfwSetWindowPos(this->window, xPos, yPos);
+	//glfwSetWindowPos(this->window, xPos, yPos);
 	glfwShowWindow(this->window);
 }
 
@@ -75,14 +82,14 @@ void WindowManager::UpData()
 	auto [_width, _height] = GetFramebufferSize(this->window);
 	this->scrWidth = _width;
 	this->scrHeight = _height;
-	std::cout << scrWidth << ", " << scrHeight << std::endl;
+	//std::cout << scrWidth << ", " << scrHeight << std::endl;
 	glfwSwapBuffers(this->window);
 	glfwPollEvents();
 }
 
-unsigned int WindowManager::GetScrWidth() const { return scrWidth; }
-unsigned int WindowManager::GetScrHeight() const { return scrHeight; }
-std::string WindowManager::GetWindowTitle() const { return windowTitle; }
+unsigned int WindowManager::GetScrWidth()const { return scrWidth; }
+unsigned int WindowManager::GetScrHeight()const { return scrHeight; }
+std::string WindowManager::GetWindowTitle()const { return windowTitle; }
 
 //---------------------------------------------------------------
 //private
@@ -115,7 +122,6 @@ GLFWwindow* WindowManager::CreateWindow(GLFWmonitor* monitor, GLFWwindow* share)
 	glfwMakeContextCurrent(window);
 
 	moveCamera = false;
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	//glad
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -140,7 +146,7 @@ void WindowManager::FrameBufferSizeCallback(GLFWwindow* window, int width, int h
 		return;
 	cbPtr = cbSMap.at(cbSID);
 
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
 }
 
 //mouse callback function
@@ -156,12 +162,12 @@ void WindowManager::MouseCallback(GLFWwindow* window, double xPos, double yPos)
 		cbPtr->lastY = yPos;
 		cbPtr->firstMouse = false;
 	}
-	float xoffset = xPos - (cbPtr->lastX);
-	float yoffset = (cbPtr->lastY) - yPos;
+	float xOffset = xPos - (cbPtr->lastX);
+	float yOffset = (cbPtr->lastY) - yPos;
 	cbPtr->lastX = xPos;
 	cbPtr->lastY = yPos;
 	if(cbPtr->moveCamera == true)
-		cbPtr->camera->ProcessMouseMovement(xoffset, yoffset);
+		cbPtr->camera->ProcessMouseMovement(xOffset, yOffset);
 }
 
 //scroll callback function

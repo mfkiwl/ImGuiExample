@@ -113,7 +113,12 @@ unsigned int SkyboxManager::LoadCubemap(std::vector<std::string> faces)
         }
         else
         {
+#if _MSVC_LANG >= 202002L	/*CXX20*/
             std::cout << std::format("Cubemap texture failed to load at path: {}", faces.at(i));
+#else	
+            std::cout << "Cubemap texture failed to load at path: " << faces.at(i) << std::endl;
+#endif
+            
         }
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

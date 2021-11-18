@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "gl_camera.h"
-#include "utility.h"
+#include "utility.hpp"
 class WindowManager
 {
 public:
@@ -23,9 +23,9 @@ public:
 	void Show(unsigned int xPos, unsigned int yPos);
 	void UpData();
 
-	unsigned int GetScrWidth() const;
-	unsigned int GetScrHeight() const;
-	std::string GetWindowTitle() const;
+	unsigned int GetScrWidth()const;
+	unsigned int GetScrHeight()const;
+	std::string GetWindowTitle()const;
 
 private:
 	GLCamera* camera;

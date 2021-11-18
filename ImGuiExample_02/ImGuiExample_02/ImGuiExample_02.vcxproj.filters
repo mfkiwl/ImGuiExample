@@ -48,13 +48,13 @@
     <ClInclude Include="include\uniform_buffer_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\utility.h">
+    <ClInclude Include="include\utility.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\window_manager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="shaders\post_process\post_process_shaders.h">
+    <ClInclude Include="shaders\post_process\post_process_shaders.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="3rd_party\include\ImGui\imconfig.h">
@@ -113,9 +113,6 @@
     <ClCompile Include="3rd_party\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="shaders\post_process\post_process_shaders.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="3rd_party\include\ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
     </ClCompile>
     <ClCompile Include="3rd_party\include\ImGui\impl\imgui_impl_opengl3.cpp">
       <Filter>ImGui\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utility.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

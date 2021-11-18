@@ -9,7 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../include/gl_shader.h"
+#include "utility.hpp"
+#include "gl_shader.h"
 
 struct Quad
 {
@@ -34,9 +35,9 @@ public:
 
 	void Bind();
 	void UnBind();
-	void Render(GLShader shader, unsigned int num, const glm::mat4 transform);
+	void Render(GLShader shader, unsigned int num = 1, const glm::mat4 transform = glm::mat4(1.0f));
 
-	unsigned int GetTexColorBuffer()const { return texColorbuffer; }
+	unsigned int GetTexColorBuffer()const;
 	void Delete();
 
 private:

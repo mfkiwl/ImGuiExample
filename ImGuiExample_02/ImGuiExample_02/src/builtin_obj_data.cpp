@@ -5,10 +5,10 @@
 //private
 //---------------------------------------------------------------
 
-const std::string BIOData::cubeTexPath = "res/container.jpg";
-const std::string BIOData::planeTexPath = "res/metal.png";
-const std::string BIOData::vegetationTexPath = "res/grass.png";
-const std::string BIOData::windowTexPath = "res/blending_transparent_window.png";
+const std::string BIOData::cubeTexPath = "res/textures/builtin/container.jpg";
+const std::string BIOData::planeTexPath = "res/textures/builtin/metal.png";
+const std::string BIOData::vegetationTexPath = "res/textures/builtin/grass.png";
+const std::string BIOData::windowTexPath = "res/textures/builtin/blending_transparent_window.png";
 
 const std::vector<float> BIOData::cubeVertices = {
     //positions           //texture Coords

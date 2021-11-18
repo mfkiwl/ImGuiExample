@@ -17,12 +17,11 @@ FramebuffersManager::FramebuffersManager(GLFWwindow* window)
     glGenFramebuffers(1, &this->FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, this->FBO);
 
-    int _width, _height; 
-    glfwGetFramebufferSize(window, &_width, &_height);
+    auto [_width, _height] = GetFramebufferSize(window);
     SetTexColorBuffer(_width, _height);
     SetRBO(_width, _height);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+        std::cout << "ERROR::FRAMEBUFFER::Framebuffer is not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -40,11 +39,16 @@ void FramebuffersManager::CreateScreenQuad(unsigned int quadNum)
 
         glBindVertexArray(quadVAO);
         glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-        glBufferData(GL_ARRAY_BUFFER, Quad::quadVertices.size() * sizeof(decltype(Quad::quadVertices)::value_type), &Quad::quadVertices.at(0), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 
+                     Quad::quadVertices.size() * sizeof(decltype(Quad::quadVertices)::value_type), &Quad::quadVertices.at(0), GL_STATIC_DRAW);
+
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(decltype(Quad::quadVertices)::value_type), (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 
+                              4 * sizeof(decltype(Quad::quadVertices)::value_type), (void*)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(decltype(Quad::quadVertices)::value_type), (void*)(2 * sizeof(decltype(Quad::quadVertices)::value_type)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 
+                              4 * sizeof(decltype(Quad::quadVertices)::value_type), (void*)(2 * sizeof(decltype(Quad::quadVertices)::value_type)));
+
         this->quad.emplace_back(quadVAO, quadVBO);
     }
     if (quadNum != 0)
@@ -61,13 +65,18 @@ void FramebuffersManager::UnBind()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FramebuffersManager::Render(GLShader shader, unsigned int num, const glm::mat4 transform = glm::mat4(1.0f))
+void FramebuffersManager::Render(GLShader shader, unsigned int num, const glm::mat4 transform)
 {
     shader.Use();
     shader.SetMat4("transform", transform);
     glBindVertexArray(this->quad.at(num - 1).VAO);
     glBindTexture(GL_TEXTURE_2D, texColorbuffer);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+unsigned int FramebuffersManager::GetTexColorBuffer()const
+{
+    return texColorbuffer;
 }
 
 void FramebuffersManager::Delete()

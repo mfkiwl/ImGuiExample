@@ -16,18 +16,25 @@
 
 #include "../include/gl_camera.h"
 #include "../include/gl_shader.h"
-#include "../include/utility.h"
+#include "../include/utility.hpp"
 #include "../include/model.h"
 #include "../include/builtin_obj.h"
 #include "../include/window_manager.h"
 #include "../include/skybox_manager.h"
 #include "../include/framebuffers_manager.h"
 #include "../include/uniform_buffer_manager.h"
-#include "../shaders/post_process/post_process_shaders.h"
+#include "../shaders/post_process/post_process_shaders.hpp"
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "assimp-vc143-mt.lib")
+
+//cast char8_t to char
+#if _MSVC_LANG >= 202002L	/*CXX20*/
+#define CAST_U8(t) reinterpret_cast<const char*>(u8##t)	
+#else	
+#define CAST_U8(t) u8##t
+#endif
 
 //setting
 const unsigned int SCR_WIDTH = 1200;
@@ -41,18 +48,18 @@ GLCamera camera(glm::vec3(0.0f, 0.0f, 10.0f));
 
 //skybox
 std::vector<std::string> faces = {
-	"res/skybox/right.jpg",
-	"res/skybox/left.jpg",
-	"res/skybox/top.jpg",
-	"res/skybox/bottom.jpg",
-	"res/skybox/front.jpg",
-	"res/skybox/back.jpg"
+	"res/textures/skybox/right.jpg",
+	"res/textures/skybox/left.jpg",
+	"res/textures/skybox/top.jpg",
+	"res/textures/skybox/bottom.jpg",
+	"res/textures/skybox/front.jpg",
+	"res/textures/skybox/back.jpg"
 };
 
 int main()
 {
 	//create window
-	WindowManager windowMgr(camera, SCR_WIDTH, SCR_HEIGHT, EXAMPLE_NAME, nullptr, nullptr);
+	WindowManager windowMgr(camera, SCR_WIDTH, SCR_HEIGHT, EXAMPLE_NAME, glfwGetPrimaryMonitor(), nullptr);
 	windowMgr.SetCallback();
 
 	//create framebuffers
@@ -118,11 +125,13 @@ int main()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	ImGui::StyleColorsLight();
+	ImFont* font1 = io.Fonts->AddFontFromFileTTF(CAST_U8("res\\fonts\\微软雅黑.ttc"), 18.0f, NULL,
+												 io.Fonts->GetGlyphRangesChineseFull());
+
+	ImGui::StyleColorsDark();
 
 	ImGui_ImplGlfw_InitForOpenGL(windowMgr.window, true);
 	ImGui_ImplOpenGL3_Init(GLSL_VER);
-
 	//draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -183,31 +192,34 @@ int main()
 		//-----------------------------------------------------------------------------------------------------------------
 		DefaultSpace.UnBind();
 		glDisable(GL_DEPTH_TEST);
-
 		//clear all relevant buffers
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
 		PostProcSpace.Bind();
 		auto transform = glm::mat4(1.0f);
-		DefaultSpace.Render(*postProcPtr, 1, transform);
+		DefaultSpace.Render(*postProcPtr);
 		PostProcSpace.UnBind();
 
-		ImGui::SetNextWindowPos(ImVec2(300, 200), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
-		ImGui::Begin("Scene Window", (bool*)1, ImGuiWindowFlags_NoMove);
-		auto pos = ImGui::GetCursorScreenPos();
+		static auto SceneWindowSize = ImVec2(600, 400);
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(SceneWindowSize, ImGuiCond_Always);
+		ImGui::Begin(CAST_U8("渲染窗口"));
+		//auto pos = ImGui::GetCursorScreenPos();
+		auto pos = ImVec2(0, 0);
 		auto drawList = ImGui::GetWindowDrawList();
-		
 		drawList->AddImage((void*)PostProcSpace.GetTexColorBuffer(),
 						   pos,
-						   ImVec2(pos.x + 600, pos.y + 400),
+						   ImVec2(pos.x+ 600, pos.y+400),
 						   ImVec2(0, 1),
 						   ImVec2(1, 0));
+		SceneWindowSize = ImVec2(windowMgr.GetScrWidth()/2, windowMgr.GetScrHeight()/2);
+		
 		ImGui::End();
 
-		ImGui::SetNextWindowPos(ImVec2(windowMgr.GetScrWidth() - 200, 0), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Always);
-		ImGui::Begin("Post Process", (bool*)1, ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::SetNextWindowPos(ImVec2(windowMgr.GetScrWidth() - 300, 0), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(300, 200), ImGuiCond_Always);
+		ImGui::Begin("Post Process", (bool*)1);
 		static int postProcIdx = 0;
 		if (ImGui::Combo("Post Process", &postProcIdx, "Default\0Inversion\0Grayscale\0"))
 		{
@@ -233,10 +245,14 @@ int main()
 	}
 
 	cube.Delete();
+	DefaultSpace.Delete();
 	PostProcSpace.Delete();
 	skyboxMgr.Delete();
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwTerminate();
 	return 0;
 }
-
